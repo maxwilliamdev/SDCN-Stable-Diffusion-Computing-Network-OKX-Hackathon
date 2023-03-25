@@ -2,6 +2,7 @@ const logger = require('../logger')
 const config = require('../config')
 const axios = require('axios');
 const chain = require('../chain')
+const redis = require('../util/redis')
 
 const txt2img = async (ctx, next) => {
     const body = ctx.request.body;
@@ -10,13 +11,21 @@ const txt2img = async (ctx, next) => {
         ctx.status = 400;
         ctx.body = {code: 0, message: 'Transaction Hash is needed.'}
     } else {
+        const redisKey = 'txhashSet';
+        const result = await redis.sismember(redisKey, txhash)
+        if(result === 1){
+            ctx.status = 400
+            ctx.body = {code: 0, message: 'The txhash is already used.'};
+            return;
+        }
+        
         const isValid = await chain.isValidTransaction(txhash);
         if (!isValid){
             ctx.status = 400
             ctx.body = {code: 0, message: 'Invalid txhash'};
             return;
         }
-
+        await redis.sadd(redisKey, txhash);
         const apiUrl = config.apiUrl;
         try {
             delete body.txhash;
