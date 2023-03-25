@@ -13,7 +13,6 @@ const contract = new ethers.Contract(contractAddress, abi, provider);
 
 const faucet = async (ctx, next) => {
   const publicAddress = ctx.query.publicAddress;
-  ethers.utils.isAddress
   if ( !publicAddress) {
     ctx.throw(400, {code: 0, message: 'Request should have publicAddress'} );
   }
@@ -34,10 +33,7 @@ const faucet = async (ctx, next) => {
         data: data  
         });
     
-        // Waiting for the transaction to be mined
         const receipt = await tx.wait();
-        receipt.transactionHash
-        // The transaction is now on chain!
         logger.info(`Mined in block ${receipt.blockNumber}`);
         ctx.status = 200;
         ctx.body = {code: 1, message: 'faucet success', txHash: receipt.transactionHash };
