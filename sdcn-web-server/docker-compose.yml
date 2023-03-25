@@ -1,0 +1,16 @@
+version: '3.0'
+services:
+  sdcn-web-server:
+    container_name: sdcn-web-server
+    build: .
+    environment:
+      - PRIVATE_KEY="your privateKey has SDCN token"
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    ports:
+      - 8080:8080
+
+  redis:
+    container_name: redis
+    image: 'redis:alpine'
