@@ -5,47 +5,20 @@ import logo from 'statics/images/logo.svg'
 import cx from 'classnames'
 import { Link, NavLink } from 'react-router-dom'
 import styles from './index.module.css'
-import useSignModal from 'hooks/useSignModal'
+import LoginModal from 'components/LoginModal'
 import userStore from 'stores/userStore'
 import { observer } from 'mobx-react-lite'
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
+import { LogoutOutlined } from '@ant-design/icons'
+import defaultAvatar from 'statics/images/default-avatar.svg'
+import uiStore from 'stores/ui'
+import persist from 'stores/persist'
 
 const Header = () => {
-  const { showSignModel } = useSignModal()
-
-  const signInHandler = () => {
-    showSignModel()
+  const onLogoutClicked = () => {
+    persist.removeAccessToken(userStore.walletAddress)
+    userStore.reset()
+    console.log('logout', userStore)
   }
-
-  const avatarElement = () => {
-    const user = userStore.user
-    if (user.avatar) {
-      return <Avatar src={user.avatar} />
-    } else if (user.name.length > 0) {
-      return (
-        <Avatar style={{ backgroundColor: '#40A9FF' }}>{user.name[0]}</Avatar>
-      )
-    } else {
-      return (
-        <Avatar
-          style={{ backgroundColor: '#40A9FF' }}
-          icon={<UserOutlined />}
-        />
-      )
-    }
-  }
-
-  const logoutButton = (
-    <Button
-      type='text'
-      icon={<LogoutOutlined />}
-      onClick={() => {
-        userStore.reset()
-      }}
-    >
-      Logout
-    </Button>
-  )
 
   return (
     <div className={cx('sticky top-0', styles.wrap)}>
@@ -92,16 +65,41 @@ const Header = () => {
             <Image src={githubIcon} width={28} preview={false} />
           </Button>
           {userStore.isLoggedIn ? (
-            <Popover content={logoutButton} placement='bottomRight'>
-              {avatarElement()}
+            <Popover
+              content={
+                <Button
+                  type='text'
+                  icon={<LogoutOutlined />}
+                  onClick={onLogoutClicked}
+                >
+                  Logout
+                </Button>
+              }
+              placement='bottomRight'
+            >
+              <Avatar src={userStore.userInfo.avatarImgUrl || defaultAvatar} />
             </Popover>
           ) : (
-            <Button type='primary' onClick={signInHandler}>
+            <Button
+              type='primary'
+              onClick={() => {
+                uiStore.shouldShowConnectWalletModal = true
+              }}
+            >
               Sign in
             </Button>
           )}
         </div>
       </div>
+      <LoginModal
+        open={uiStore.shouldShowConnectWalletModal}
+        onClose={() => {
+          uiStore.shouldShowConnectWalletModal = false
+        }}
+        onConnect={async () => {
+          uiStore.shouldShowConnectWalletModal = false
+        }}
+      />
     </div>
   )
 }
