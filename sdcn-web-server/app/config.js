@@ -14,6 +14,7 @@ const configs = {
     sendAddress: process.env.SEND_ADDRESS,
     privateKey: process.env.PRIVATE_KEY,
     web3_provider_host: 'https://exchaintestrpc.okex.org/',
+    apiUrl: process.env.API_URL || 'https://api.sdcn.info/txt2img',
   },
   logging: {
     enable: process.env.LOG_ENABLED || true,
