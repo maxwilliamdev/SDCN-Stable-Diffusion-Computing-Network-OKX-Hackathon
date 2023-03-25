@@ -9,6 +9,9 @@ import ProcessingMask from 'components/ProcessingMask'
 import persist from 'stores/persist'
 import userStore from 'stores/userStore'
 import { wallet } from 'wallets/wallet'
+import { nanoid } from 'nanoid'
+import { requestFunds, RequestFundsResponse } from 'api/faucet'
+import { AxiosError } from 'axios'
 
 interface Props {
   open: boolean
@@ -47,9 +50,8 @@ const LoginModal = (props: Props) => {
     }
 
     const address = accounts[0]
-    /*
     const nonce = nanoid()
-    const signMsg = `Welcome to SDCN!\n\nClick to sign in and accept the SDCN Terms of Service.\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n${address}\n\nNonce:\n${nonce}`
+    const signMsg = `Welcome to SDCN!\n\nClick to sign in to get SDCN token airdrops.\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n${address}\n\nNonce:\n${nonce}`
     const [personalSignError, signature] = await to(
       wallet.personalSign(signMsg, address),
     )
@@ -58,16 +60,26 @@ const LoginModal = (props: Props) => {
       onClose()
       return
     }
-    const [loginError, accessToken] = await to<string, AxiosError>(
-      userApi.login(signMsg, signature, address),
-    )
-    console.log('login result', loginError, accessToken)
-    if (loginError !== null) {
+    const [faucetError, requestFundsResp] = await to<
+      RequestFundsResponse,
+      AxiosError
+    >(requestFunds(address, signMsg, signature))
+    console.log('requestFunds result', faucetError, requestFundsResp)
+    if (faucetError !== null) {
+      setIsConnecting(false)
       onClose()
-      message.error(`登录失败（${loginError.response?.status ?? 'unknown'}）`)
+      message.error(
+        `Request faucet failed:（${
+          faucetError.response?.status ?? 'unknown'
+        }）`,
+      )
       return
     }
-    */
+    if (requestFundsResp.code === 1) {
+      message.success(`You have successfully got SDCN airdrop tokens`)
+    } else {
+      message.info(`You have already got airdrop SDCN tokens today`)
+    }
 
     persist.setAccessToken(address, address)
     userStore.updateUserInfo({
@@ -77,7 +89,7 @@ const LoginModal = (props: Props) => {
     userStore.walletAddress = address
     userStore.isLoggedIn = true
 
-    message.success('SUCCESS')
+    message.success('connect to wallet success')
 
     setIsConnecting(false)
     onConnect()
