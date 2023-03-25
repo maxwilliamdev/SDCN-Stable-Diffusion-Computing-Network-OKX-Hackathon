@@ -1,5 +1,6 @@
 import EventEmitter from 'events'
-import { ethers, BrowserProvider, Signer, Eip1193Provider } from 'ethers'
+import { ethers, Signer } from 'ethers'
+import { Web3Provider, ExternalProvider } from '@ethersproject/providers'
 
 interface WalletEvents {
   accountsChanged: (accounts: string[]) => void
@@ -11,7 +12,7 @@ export enum WalletVendor {
   OKXWALLET = 'okxWallet',
 }
 
-function getVendorProvider(vendor: WalletVendor): Eip1193Provider {
+function getVendorProvider(vendor: WalletVendor): ExternalProvider {
   return vendor === WalletVendor.OKXWALLET ? window.okexchain : window.ethereum
 }
 
@@ -27,7 +28,7 @@ declare interface WalletWrapper {
 
 class WalletWrapper extends EventEmitter {
   private vendor: WalletVendor = WalletVendor.DEFAULT
-  private provider: BrowserProvider | undefined
+  private provider: Web3Provider | undefined
 
   private signer: Signer | undefined
 
@@ -54,10 +55,10 @@ class WalletWrapper extends EventEmitter {
     )
   }
 
-  getProvider = (): BrowserProvider => {
+  getProvider = (): Web3Provider => {
     this.provider =
       this.provider ??
-      new ethers.BrowserProvider(getVendorProvider(this.vendor))
+      new ethers.providers.Web3Provider(getVendorProvider(this.vendor))
     return this.provider
   }
 
@@ -76,7 +77,7 @@ class WalletWrapper extends EventEmitter {
 
       const provider = this.getProvider()
       provider
-        .send('eth_accounts', {})
+        .send('eth_accounts', [])
         .then((result) => {
           resolve(result)
         })
@@ -94,7 +95,7 @@ class WalletWrapper extends EventEmitter {
 
       const provider = this.getProvider()
       provider
-        .send('eth_requestAccounts', {})
+        .send('eth_requestAccounts', [])
         .then((result) => {
           resolve(result)
         })
