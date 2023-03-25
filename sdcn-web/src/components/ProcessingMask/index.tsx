@@ -9,13 +9,14 @@ const { Title } = Typography
 
 interface GeneratingMaskProps {
   open: boolean
+  text: string
 }
 
-const GeneratingMask = ({ open }: GeneratingMaskProps) => {
+const GeneratingMask = ({ open, text }: GeneratingMaskProps) => {
   const icon = <LoadingOutlined style={{ fontSize: 36 }} spin />
   const tip = (
     <Title level={5} style={{}}>
-      Generating...
+      {text}
     </Title>
   )
 
