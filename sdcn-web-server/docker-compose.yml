@@ -4,7 +4,7 @@ services:
     container_name: sdcn-web-server
     build: .
     environment:
-      - PRIVATE_KEY="your privateKey has SDCN token"
+      - PRIVATE_KEY=Your privateKey has SDCN token
       - REDIS_HOST=redis
     depends_on:
       - redis
