@@ -12,7 +12,10 @@ export interface txt2imgParams {
   height: number
   negative_prompt: string
   model: string
+  txhash: string
 }
+
+const apiHost = process.env.WEB_API_HOST || ''
 
 export async function txt2img(params: txt2imgParams): Promise<string> {
   const data = {
@@ -35,9 +38,10 @@ export async function txt2img(params: txt2imgParams): Promise<string> {
     height: params.height,
     negative_prompt: params.negative_prompt,
     model: params.model,
+    txhash: params.txhash,
   }
 
-  const response = await fetch('https://api.sdcn.info/txt2img', {
+  const response = await fetch(`${apiHost}/txt2img`, {
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',
