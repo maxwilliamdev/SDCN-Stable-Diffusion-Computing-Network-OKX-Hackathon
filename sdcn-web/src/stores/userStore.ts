@@ -1,33 +1,55 @@
 import { makeAutoObservable } from 'mobx'
-import { User } from 'typings/User'
+import { UserInfo } from 'typings/UserInfo'
+import defaultAvatar from 'statics/images/default-avatar.svg'
 
 class UserStore {
   constructor() {
     makeAutoObservable(this)
   }
 
-  private _user: User = {
-    id: '',
-    name: '',
-  }
-
-  get user() {
-    return Object.assign({}, this._user)
-  }
+  private _isLoggedIn = false
 
   get isLoggedIn() {
-    return this._user.id !== ''
+    return this._isLoggedIn
   }
 
-  updateUser(u: Partial<User>) {
-    const cloneUser = { ...u }
-    return Object.assign(this._user, cloneUser)
+  set isLoggedIn(flag: boolean) {
+    this._isLoggedIn = flag
+  }
+
+  private _walletAddress = ''
+
+  get walletAddress() {
+    return this._walletAddress
+  }
+
+  set walletAddress(address: string) {
+    this._walletAddress = address
+  }
+
+  private _userInfo: UserInfo = {
+    nickname: '',
+    userId: '',
+    avatarImgUrl: '',
+  }
+
+  get userInfo() {
+    return Object.assign({}, this._userInfo)
+  }
+
+  updateUserInfo(info: Partial<UserInfo>) {
+    const cloneInfo = { ...info }
+    cloneInfo.avatarImgUrl = cloneInfo.avatarImgUrl ?? defaultAvatar
+    return Object.assign(this._userInfo, cloneInfo)
   }
 
   reset() {
-    this._user = {
-      id: '',
-      name: '',
+    this._isLoggedIn = false
+    this._walletAddress = ''
+    this._userInfo = {
+      nickname: '',
+      userId: '',
+      avatarImgUrl: '',
     }
   }
 }
