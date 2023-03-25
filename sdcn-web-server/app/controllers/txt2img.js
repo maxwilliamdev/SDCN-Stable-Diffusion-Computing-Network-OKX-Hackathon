@@ -1,7 +1,7 @@
 const logger = require('../logger')
 const config = require('../config')
 const axios = require('axios');
-
+const chain = require('../chain')
 
 const txt2img = async (ctx, next) => {
     const body = ctx.request.body;
@@ -10,6 +10,13 @@ const txt2img = async (ctx, next) => {
         ctx.status = 400;
         ctx.body = {code: 0, message: 'Transaction Hash is needed.'}
     } else {
+        const isValid = await chain.isValidTransaction(txhash);
+        if (!isValid){
+            ctx.status = 400
+            ctx.body = {code: 0, message: 'Invalid txhash'};
+            return;
+        }
+
         const apiUrl = config.apiUrl;
         try {
             delete body.txhash;
