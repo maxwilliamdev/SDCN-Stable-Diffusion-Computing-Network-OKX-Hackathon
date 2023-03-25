@@ -4,7 +4,7 @@ import cx from 'classnames'
 
 import styles from './index.module.css'
 
-import githubIcon from 'assets/images/icon_github.svg'
+import githubIcon from 'statics/images/icon_github.svg'
 
 const Footer = () => {
   return (
