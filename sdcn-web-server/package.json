@@ -1,0 +1,28 @@
+{
+  "name": "sdcn-api-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app/index.js"
+  },
+  "keywords": [],
+  "author": "Synthintel <synthintel2@gmail.com>",
+  "dependencies": {
+    "@hapi/boom": "^7.4.3",
+    "@kasa/koa-logging": "^0.3.0",
+    "dotenv": "^8.1.0",
+    "ethers": "5.4",
+    "koa": "^2.8.1",
+    "koa-body": "^4.1.1",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "pino": "^5.13.2",
+    "ioredis": "^5.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12",
+    "pino-pretty": "^3.2.1",
+    "ioredis": "^5.3.1"
+  }
+}
