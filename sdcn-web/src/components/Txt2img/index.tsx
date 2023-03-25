@@ -10,8 +10,13 @@ import { txt2img, txt2imgParams } from 'api/txt2img'
 import ImageWidget from 'components/ImageWidget'
 import { FormFinishInfo } from 'rc-field-form/es/FormContext'
 import ProcessingMask from 'components/ProcessingMask'
+import { observer } from 'mobx-react-lite'
+import uiStore from 'stores/ui'
+import userStore from 'stores/userStore'
+import { ReactComponent as sdcnWhiteIcon } from 'statics/images/sdcn-white.svg'
 
 import styles from './index.module.css'
+import Icon from '@ant-design/icons'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -42,7 +47,10 @@ function InputAndGenerateArea({
           </Form.Item>
         </Form>
         <Button type='primary' onClick={onButtonClicked} size='large'>
-          Generate
+          <div className={cx('flex items-center gap-x-1')}>
+            Generate (-5
+            <Icon component={sdcnWhiteIcon} style={{ fontSize: '20px' }} />)
+          </div>
         </Button>
       </div>
     </div>
@@ -95,6 +103,10 @@ const Txt2img = () => {
   const [imgUri, setImgUri] = useState<string | undefined>()
   const [imgLoading, setImgLoading] = useState<boolean>(false)
 
+  const onLoginButtonClicked = () => {
+    uiStore.shouldShowConnectWalletModal = true
+  }
+
   const onGenerationButtonClicked = () => {
     // First form submit
     SettingsForm.submit()
@@ -140,7 +152,11 @@ const Txt2img = () => {
       >
         <div className={cx('flex flex-col flex-1 bg-red-000')}>
           <InputAndGenerateArea
-            onButtonClicked={onGenerationButtonClicked}
+            onButtonClicked={
+              userStore.isLoggedIn
+                ? onGenerationButtonClicked
+                : onLoginButtonClicked
+            }
             form={PromptForm}
           />
           <ImageWidget src={imgUri} />
@@ -151,4 +167,4 @@ const Txt2img = () => {
   )
 }
 
-export default Txt2img
+export default observer(Txt2img)
