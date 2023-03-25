@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Form, Select, Button, Input, Typography, FormInstance } from 'antd'
+import {
+  Form,
+  Select,
+  Button,
+  Input,
+  Typography,
+  FormInstance,
+  message,
+} from 'antd'
 import {
   ModelFormGroup,
   LoraFormGroup,
@@ -14,12 +22,17 @@ import { observer } from 'mobx-react-lite'
 import uiStore from 'stores/ui'
 import userStore from 'stores/userStore'
 import { ReactComponent as sdcnWhiteIcon } from 'statics/images/sdcn-white.svg'
+import { transferTokens } from 'api/sdcnToken'
 
 import styles from './index.module.css'
 import Icon from '@ant-design/icons'
+import { ethers } from 'ethers'
 
 const { Title } = Typography
 const { TextArea } = Input
+
+const targetAddress = '0xeC9516FC19C46CBED45E50F11e1C1D4a41796e1E'
+const generationPrice = ethers.utils.parseEther('5')
 
 function InputAndGenerateArea({
   form,
@@ -101,7 +114,8 @@ const Txt2img = () => {
   const [PromptForm] = Form.useForm()
 
   const [imgUri, setImgUri] = useState<string | undefined>()
-  const [imgLoading, setImgLoading] = useState<boolean>(false)
+  const [processing, setProcessing] = useState<boolean>(false)
+  const [processingText, setProcessingText] = useState<string>('Processing...')
 
   const onLoginButtonClicked = () => {
     uiStore.shouldShowConnectWalletModal = true
@@ -133,9 +147,26 @@ const Txt2img = () => {
       apiParams = Object.assign(apiParams, values)
       console.log('second submit, merged', apiParams)
       ;(async () => {
-        setImgLoading(true)
-        setImgUri(await txt2img(apiParams))
-        setImgLoading(false)
+        setProcessing(true)
+        let progress = 'Purchasing'
+        try {
+          setProcessingText(`${progress}...`)
+          const rcpt = await transferTokens(targetAddress, generationPrice)
+          apiParams.txhash = rcpt.transactionHash
+          progress = 'Generating'
+          setProcessingText(`${progress}...`)
+          setImgUri(await txt2img(apiParams))
+          message.success(`${progress} complete`)
+        } catch (err) {
+          let errInfo = ''
+          if (typeof err === 'string') {
+            errInfo = err
+          } else if (err instanceof Error) {
+            errInfo = err.message
+          }
+          message.error(`${progress} failed, error ${errInfo}`)
+        }
+        setProcessing(false)
       })()
     }
   }
@@ -143,7 +174,7 @@ const Txt2img = () => {
   return (
     /* when Form submitted, the parent Form.Provider received the submittion via onFormFinish */
     <Form.Provider onFormFinish={onFormSubmit}>
-      <ProcessingMask open={imgLoading} text='Generating...' />
+      <ProcessingMask open={processing} text={processingText} />
       <div
         className={cx(
           styles.wrap,
