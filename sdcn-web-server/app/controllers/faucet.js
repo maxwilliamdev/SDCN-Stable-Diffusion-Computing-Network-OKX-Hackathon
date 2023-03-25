@@ -14,11 +14,15 @@ const contract = new ethers.Contract(contractAddress, abi, provider);
 const faucet = async (ctx, next) => {
   const publicAddress = ctx.query.publicAddress;
   if ( !publicAddress) {
-    ctx.throw(400, {code: 0, message: 'Request should have publicAddress'} );
+    ctx.status = 400;
+    ctx.body = {code: 0, message: 'Request should have publicAddress'} ;
+    return;
   }
 
   if ( !ethers.utils.isAddress(publicAddress)) {
-    ctx.throw(400, {code: 0, message: 'Invalid  address'});
+    ctx.status = 400;
+    ctx.body = {code: 0, message: 'Invalid  address'} ;
+    return;
   } else {
     const redisKey = 'Faucet:' + publicAddress;
     let result = await redis.get(redisKey);

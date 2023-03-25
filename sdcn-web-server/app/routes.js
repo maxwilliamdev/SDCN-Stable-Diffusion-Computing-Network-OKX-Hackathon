@@ -5,7 +5,7 @@ const Txt2imgController = require('./controllers/txt2img')
 
 module.exports = function () {
 	let router = new Router()
-	router.get('/faucet', FaucetController.faucet);
+	router.post('/faucet', FaucetController.faucet);
 	router.post('/txt2img',Txt2imgController.txt2img);
 	return router
 }
