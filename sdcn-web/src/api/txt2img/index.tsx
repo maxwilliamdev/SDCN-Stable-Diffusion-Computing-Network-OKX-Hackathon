@@ -15,7 +15,7 @@ export interface txt2imgParams {
   txhash: string
 }
 
-const apiHost = process.env.WEB_API_HOST || ''
+const apiHost = process.env.REACT_APP_WEB_API_HOST || ''
 
 export async function txt2img(params: txt2imgParams): Promise<string> {
   const data = {
