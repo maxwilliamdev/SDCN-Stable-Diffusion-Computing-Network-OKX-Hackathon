@@ -6,6 +6,10 @@ const redis = require('../util/redis')
 
 const txt2img = async (ctx, next) => {
     const body = ctx.request.body;
+    ctx.set('Access-Control-Allow-Origin', ctx.get('Origin'));
+    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    ctx.set('Content-Type', 'application/json');
+    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length');
     const txhash = body.txhash;
     if ( !txhash) {
         ctx.status = 400;
