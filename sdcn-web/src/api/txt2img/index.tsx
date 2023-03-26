@@ -45,13 +45,10 @@ export async function txt2img(params: txt2imgParams): Promise<string> {
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',
-    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
     body: JSON.stringify(data),
   })
   const resp_json = await response.json()

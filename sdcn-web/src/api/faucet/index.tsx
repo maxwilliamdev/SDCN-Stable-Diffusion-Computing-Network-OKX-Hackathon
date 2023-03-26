@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiHost = process.env.WEB_API_HOST || ''
+const apiHost = process.env.REACT_APP_WEB_API_HOST || ''
 
 export interface RequestFundsResponse {
   code: number
@@ -17,6 +17,9 @@ export async function requestFunds(
     axios
       .post<RequestFundsResponse>(
         `${apiHost}/faucet?publicAddress=${address}&msg=${msg}&sign=${sign}`,
+        {
+          'Access-Control-Allow-Credentials': 'true',
+        },
       )
       .then((res) => {
         resolve(res.data)
