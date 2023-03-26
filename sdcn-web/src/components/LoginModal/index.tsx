@@ -51,7 +51,7 @@ const LoginModal = (props: Props) => {
 
     const address = accounts[0]
     const nonce = nanoid()
-    const signMsg = `Welcome to SDCN!\n\nClick to sign in to get SDCN token airdrops.\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n${address}\n\nNonce:\n${nonce}`
+    const signMsg = `Welcome to DAN!\n\nClick to sign in to get DAN token airdrops.\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n${address}\n\nNonce:\n${nonce}`
     const [personalSignError, signature] = await to(
       wallet.personalSign(signMsg, address),
     )
@@ -76,9 +76,9 @@ const LoginModal = (props: Props) => {
       return
     }
     if (requestFundsResp.code === 1) {
-      message.success(`You have successfully got SDCN airdrop tokens`)
+      message.success(`You have successfully got DAN airdrop tokens`)
     } else {
-      message.info(`You have already got airdrop SDCN tokens today`)
+      message.info(`You have already got airdrop DAN tokens today`)
     }
 
     persist.setAccessToken(address, address)

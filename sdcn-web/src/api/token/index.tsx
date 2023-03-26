@@ -20,7 +20,7 @@ export async function transferTokens(
   }
   await contractInstance.connect(signer)
   const tx = await contractInstance.transfer(to, amount, options)
-  console.log('SDCN token Transaction sent:', tx.hash)
+  console.log('DAN token Transaction sent:', tx.hash)
 
   await tx.wait()
 

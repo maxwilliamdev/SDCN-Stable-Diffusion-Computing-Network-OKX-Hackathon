@@ -21,8 +21,8 @@ import ProcessingMask from 'components/ProcessingMask'
 import { observer } from 'mobx-react-lite'
 import uiStore from 'stores/ui'
 import userStore from 'stores/userStore'
-import { ReactComponent as sdcnWhiteIcon } from 'statics/images/sdcn-white.svg'
-import { transferTokens } from 'api/sdcnToken'
+import { ReactComponent as logoWhiteIcon } from 'statics/images/logo-white.svg'
+import { transferTokens } from 'api/token'
 
 import styles from './index.module.css'
 import Icon from '@ant-design/icons'
@@ -62,7 +62,7 @@ function InputAndGenerateArea({
         <Button type='primary' onClick={onButtonClicked} size='large'>
           <div className={cx('flex items-center gap-x-1')}>
             Generate (-5
-            <Icon component={sdcnWhiteIcon} style={{ fontSize: '20px' }} />)
+            <Icon component={logoWhiteIcon} style={{ fontSize: '20px' }} />)
           </div>
         </Button>
       </div>

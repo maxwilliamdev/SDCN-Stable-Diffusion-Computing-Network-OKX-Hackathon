@@ -13,8 +13,7 @@ const Footer = () => {
         className={cx('flex justify-between items-center', styles.contentWrap)}
       >
         <div className={cx(styles.left)}>
-          Copyright ©2023 Stable Diffusion Computing Network. All rights
-          reserved.
+          Copyright ©2023 Decentralized AIGC Network. All rights reserved.
         </div>
 
         <div className={cx(styles.right)}>

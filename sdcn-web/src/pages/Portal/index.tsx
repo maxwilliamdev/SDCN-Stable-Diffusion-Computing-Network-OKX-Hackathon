@@ -34,7 +34,7 @@ const Portal = () => {
     <div className={cx('mt-auto', styles.wrap)}>
       <div className={cx(styles.contentWrap)}>
         <Title className={cx('text-center')} level={1} ellipsis>
-          Stable Diffusion Computing Network
+          Decentralized AIGC Network
         </Title>
         {introduceData.map((data, i) => (
           <Paragraph key={i}>{data}</Paragraph>
