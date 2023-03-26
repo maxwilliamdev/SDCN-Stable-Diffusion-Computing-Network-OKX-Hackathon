@@ -17,9 +17,7 @@ export async function requestFunds(
     axios
       .post<RequestFundsResponse>(
         `${apiHost}/faucet?publicAddress=${address}&msg=${msg}&sign=${sign}`,
-        {
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        {},
       )
       .then((res) => {
         resolve(res.data)
