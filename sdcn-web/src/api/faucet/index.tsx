@@ -15,7 +15,7 @@ export async function requestFunds(
 ): Promise<RequestFundsResponse> {
   return new Promise((resolve, reject) => {
     axios
-      .get<RequestFundsResponse>(
+      .post<RequestFundsResponse>(
         `${apiHost}/faucet?publicAddress=${address}&msg=${msg}&sign=${sign}`,
       )
       .then((res) => {
